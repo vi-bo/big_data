@@ -1,0 +1,82 @@
+# vibo: откуда поступают данные (Twitter)
+# Имя_нашего_агента.источники_данных
+TwitterAgent.sources = Twitter
+
+# vibo: что мы будем использовать в качестве канала (канал в оперативной памяти)
+# Имя_нашего_агента.каналы_передачи_данных
+# ДОБАВЛЯЕМ ВТОРОЙ КАНАЛ, КОТОРЫЙ КОТОРЫЙ ОТПРАВЛЯЕТ ДАННЫЕ В KAFKA
+TwitterAgent.channels = MemChannel MemChannelKafka
+
+# vibo: куда будем сливать наши данные (в HDFS)
+# Имя_нашего_агента.стоки
+# ПОЯВЛЯЕТСЯ ВТОРОЙ СТОК Kafka
+TwitterAgent.sinks = HDFS Kafka
+
+########## Source Twitter ##########
+
+# Имя_нашего_агента.источники_данных.Twitter.класс_отвечающий_за_источник
+TwitterAgent.sources.Twitter.type = com.cloudera.flume.source.TwitterSourse
+
+# Имя_нашего_агента.источники_данных.Twitter.название_канала
+# ДОБАВЛЯЕМ КАНАЛ KAFKA В TWITTER, ЧТОБЫ ТУДА ПОСТУПАЛИ ДАННЫЕ
+TwitterAgent.sources.Twitter.channels = MemChannel MemChannelKafka
+
+TwitterAgent.sources.Twitter.consumerKey = xxxxxxxxxxxxxxxxxxxx
+TwitterAgent.sources.Twitter.consumerSecret = xxxxxxxxxxxxxxxxxxxx
+TwitterAgent.sources.Twitter.accessToken = xxxxxxxxxxxxxxxxxxxx
+TwitterAgent.sources.Twitter.accessTokenSecret = xxxxxxxxxxxxxxxxxxxx
+
+# Имя_нашего_агента.источники_данных.Twitter.ключевые_слова_по_нашей_теме_через_запятую
+TwitterAgent.sources.Twitter.keywords = 
+
+########## SINK HDFS ##########
+
+# Имя_нашего_агента.стоки.HDFS.каналы_передачи_данных
+TwitterAgent.sinks.HDFS.channel = MemChannel
+
+# Имя_нашего_агента.стоки.HDFS.тип_стока
+TwitterAgent.sinks.HDFS.type = hdfs
+
+# Имя_нашего_агента.стоки.HDFS.путь_к_папке_назначения
+TwitterAgent.sinks.HDFS.hdfs.path = hdfs:///user/cloudera/tweets
+
+# Имя_нашего_агента.стоки.HDFS.префикс_для_временных_файлов
+TwitterAgent.sinks.HDFS.hdfs.inUsePrefix =.
+
+# Имя_нашего_агента.стоки.HDFS.формат_файла
+TwitterAgent.sinks.HDFS.hdfs.fileType = DataStream
+
+# Настройка частоты сброса и размер файла.
+TwitterAgent.sinks.HDFS.hdfs.batchSize = 10
+TwitterAgent.sinks.HDFS.hdfs.rollSize = 0
+TwitterAgent.sinks.HDFS.hdfs.rollInterval = 600
+TwitterAgent.sinks.HDFS.hdfs.rollCount = 10000
+
+########## CHANNEL ##########
+
+# Имя_нашего_агента.каналы.MemChannel.тип_канала
+TwitterAgent.channels.MemChannel.type = memory
+
+# Имя_нашего_агента.каналы.MemChannel.объем канала
+TwitterAgent.channels.MemChannel.capacity = 100
+
+# ДОБАВЛЯЕМ КАНАЛ KAFKA
+
+########## ADDED KAFKA CHANNEL ##########
+TwitterAgent.channels.MemChannelKafka.type = memory
+TwitterAgent.channels.MemChannelKafka.capacity = 100
+
+# ДОБАВЛЯЕМ СТОК ДЛЯ KAFKA
+
+########## SINK KAFKA ##########
+# vibo: стандартный sink для flume, может сразу писать в kafka
+TwitterAgent.sinks.Kafka.type = org.apache.flume.sink.kafka.KafkaSink
+# vibo: указываем наименование топика
+TwitterAgent.sinks.Kafka.topic = tweets
+# vibo: указываем брокера, который будем писать
+TwitterAgent.sinks.Kafka.brokerList = quickstart.cloudera:9092
+# vibo: указываем канал, через который это делать
+TwitterAgent.sinks.Kafka.chennel = MemChannelKafka
+# vibo: и указываем сколько сообщений
+TwitterAgent.sinks.Kafka.batchSize = 20
+

@@ -1,0 +1,58 @@
+# vibo: откуда поступают данные (Twitter)
+# Имя_нашего_агента.источники_данных
+TwitterAgent.sources = Twitter
+
+# vibo: что мы будем использовать в качестве канала (канал в оперативной памяти)
+# Имя_нашего_агента.каналы_передачи_данных
+TwitterAgent.channels = MemChannel
+
+# vibo: куда будем сливать наши данные (в HDFS)
+# Имя_нашего_агента.стоки
+TwitterAgent.sinks = HDFS
+
+########## Source Twitter ##########
+
+# Имя_нашего_агента.источники_данных.Twitter.класс_отвечающий_за_источник
+TwitterAgent.sources.Twitter.type = com.cloudera.flume.source.TwitterSourse
+
+# Имя_нашего_агента.источники_данных.Twitter.название_канала
+TwitterAgent.sources.Twitter.channels = MemChannel
+
+TwitterAgent.sources.Twitter.consumerKey = xxxxxxxxxxxxxxxxxxxx
+TwitterAgent.sources.Twitter.consumerSecret = xxxxxxxxxxxxxxxxxxxx
+TwitterAgent.sources.Twitter.accessToken = xxxxxxxxxxxxxxxxxxxx
+TwitterAgent.sources.Twitter.accessTokenSecret = xxxxxxxxxxxxxxxxxxxx
+
+# Имя_нашего_агента.источники_данных.Twitter.ключевые_слова_по_нашей_теме_через_запятую
+TwitterAgent.sources.Twitter.keywords = 
+
+########## SINK HDFS ##########
+
+# Имя_нашего_агента.стоки.HDFS.каналы_передачи_данных
+TwitterAgent.sinks.HDFS.channel = MemChannel
+
+# Имя_нашего_агента.стоки.HDFS.тип_стока
+TwitterAgent.sinks.HDFS.type = hdfs
+
+# Имя_нашего_агента.стоки.HDFS.путь_к_папке_назначения
+TwitterAgent.sinks.HDFS.hdfs.path = hdfs:///user/cloudera/tweets
+
+# Имя_нашего_агента.стоки.HDFS.префикс_для_временных_файлов
+TwitterAgent.sinks.HDFS.hdfs.inUsePrefix =.
+
+# Имя_нашего_агента.стоки.HDFS.формат_файла
+TwitterAgent.sinks.HDFS.hdfs.fileType = DataStream
+
+# Настройка частоты сброса и размер файла.
+TwitterAgent.sinks.HDFS.hdfs.batchSize = 10
+TwitterAgent.sinks.HDFS.hdfs.rollSize = 0
+TwitterAgent.sinks.HDFS.hdfs.rollInterval = 600
+TwitterAgent.sinks.HDFS.hdfs.rollCount = 10000
+
+########## CHANNEL ##########
+
+# Имя_нашего_агента.каналы.MemChannel.тип_канала
+TwitterAgent.channels.MemChannel.type = memory
+
+# Имя_нашего_агента.каналы.MemChannel.объем канала
+TwitterAgent.channels.MemChannel.capacity = 100
